@@ -34,7 +34,7 @@ Pastikan Anda telah menginstal [Node.js](https://nodejs.org/) (disarankan versi 
 
 1.  **Clone repositori ini (atau unduh file proyek):**
     ```bash
-    # Ganti <URL_REPOSITORI> dengan URL Git Anda jika ada
+    # Ganti <URL_REPOSITORI> dengan URL Git punya kalian jika ada
     git clone <URL_REPOSITORI>
     cd nama-direktori-proyek
     ```

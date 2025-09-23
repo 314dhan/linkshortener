@@ -8,19 +8,111 @@
 </head>
 <body>
     <div class="container">
-        <h1>URL Shortener</h1>
-        <form action="/shorten" method="POST">
-            <input type="url" name="originalUrl" id="originalUrl" placeholder="Enter a long URL" required>
-            <button type="submit">Shorten</button>
+        <div class="header">
+            <div class="icon-container">
+                <i class="fas fa-link main-icon"></i>
+            </div>
+            <h1>URL Shortener</h1>
+            <p class="subtitle">Transform long URLs into short, shareable links</p>
+        </div>
+    
+        <form action="/shorten" method="POST" id="shortenForm">
+            <div class="input-group">
+                <i class="fas fa-globe input-icon"></i>
+                <input type="url" name="originalUrl" id="originalUrl" placeholder="Enter your long URL here..." required
+                    autocomplete="off">
+                <div class="input-focus-effect"></div>
+            </div>
+    
+            <button type="submit" id="submitBtn">
+                <i class="fas fa-scissors"></i>
+                <span class="btn-text">Shorten URL</span>
+            </button>
         </form>
+    
         <div class="short-url-container">
+            <!-- Error state (demo) -->
+            <!-- <div class="result-card error-result">
+                    <p class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Please enter a valid URL
+                    </p>
+                </div> -->
+    
+            <!-- Success state (demo) -->
+            <!-- <div class="result-card success-result">
+                    <div class="result-label">Your shortened URL</div>
+                    <div class="short-url-link">
+                        <a href="#" class="short-url-text" target="_blank">https://short.ly/abc123</a>
+                        <button class="copy-button" onclick="copyToClipboard()">
+                            <i class="fas fa-copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                    <p class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        URL shortened successfully!
+                    </p>
+                </div> -->
+    
+            <!-- EJS Template rendering (uncomment these for actual use) -->
             <% if (locals.error) { %>
-                <p class="error"><%= error %></p>
-            <% } %>
-            <% if (locals.shortUrl) { %>
-                <p>Short URL: <a href="<%= shortUrl %>" target="_blank"><%= shortUrl %></a></p>
-            <% } %>
+                <div class="result-card error-result">
+                    <p class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <%= error %>
+                    </p>
+                </div>
+                <% } %>
+    
+                    <% if (locals.shortUrl) { %>
+                        <div class="result-card success-result">
+                            <div class="result-label">Your shortened URL</div>
+                            <div class="short-url-link">
+                                <a href="<%= shortUrl %>" class="short-url-text" target="_blank">
+                                    <%= shortUrl %>
+                                </a>
+                                <button class="copy-button" onclick="copyToClipboard('<%= shortUrl %>')">
+                                    <i class="fas fa-copy"></i>
+                                    Copy
+                                </button>
+                            </div>
+                            <p class="success-message">
+                                <i class="fas fa-check-circle"></i>
+                                URL shortened successfully!
+                            </p>
+                        </div>
+                        <% } %>
+        </div>
+    
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">1.2M+</div>
+                <div class="stat-label">Links Shortened</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
         </div>
     </div>
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                const copyButton = document.querySelector('.copy-button');
+                const originalContent = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(function() {
+                    copyButton.innerHTML = originalContent;
+                }, 2000);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
 </body>
 </html>

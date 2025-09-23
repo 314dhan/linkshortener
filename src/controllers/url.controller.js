@@ -1,25 +1,6 @@
 const { nanoid } = require('nanoid');
 const validUrl = require('valid-url');
-const fs = require('fs');
-const path = require('path');
-
-const dbPath = path.join(__dirname, '../../data/db.json');
-
-// Helper function to read the database
-const readDb = () => {
-    try {
-        const data = fs.readFileSync(dbPath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        // If file doesn't exist or is empty, return empty array
-        return [];
-    }
-};
-
-// Helper function to write to the database
-const writeDb = (data) => {
-    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
-};
+const Url = require('../models/url.model');
 
 exports.shortenUrl = (req, res) => {
     const { originalUrl } = req.body;
@@ -30,8 +11,7 @@ exports.shortenUrl = (req, res) => {
     }
 
     try {
-        const urls = readDb();
-        let url = urls.find(u => u.originalUrl === originalUrl);
+        let url = Url.findByOriginalUrl(originalUrl);
 
         if (url) {
             res.render('index', { shortUrl: url.shortUrl, error: null });
@@ -47,8 +27,7 @@ exports.shortenUrl = (req, res) => {
                 createdAt: new Date()
             };
 
-            urls.push(newUrl);
-            writeDb(urls);
+            Url.save(newUrl);
 
             res.render('index', { shortUrl: shortUrl, error: null });
         }
@@ -60,12 +39,11 @@ exports.shortenUrl = (req, res) => {
 
 exports.redirectUrl = (req, res) => {
     try {
-        const urls = readDb();
-        const url = urls.find(u => u.urlCode === req.params.code);
+        const url = Url.findByCode(req.params.code);
 
         if (url) {
             url.clicks++;
-            writeDb(urls);
+            Url.update(url);
             return res.redirect(url.originalUrl);
         } else {
             return res.status(404).send('No URL found');

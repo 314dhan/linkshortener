@@ -1,13 +1,27 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
-const dbPath = path.join(__dirname, '../../data/db.json');
+const dbPath = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'db.json')
+  : path.join(__dirname, '../../data/db.json');
+
+// Ensure the db file exists in tmp directory for Vercel
+if (process.env.VERCEL && !fs.existsSync(dbPath)) {
+  fs.writeFileSync(dbPath, '[]', 'utf8');
+}
 
 const readDb = () => {
     try {
         const data = fs.readFileSync(dbPath, 'utf8');
         return JSON.parse(data);
     } catch (error) {
+        // If the file doesn't exist, create it with an empty array
+        if (error.code === 'ENOENT') {
+            writeDb([]);
+            return [];
+        }
+        console.error('Error reading database:', error);
         return [];
     }
 };

@@ -53,3 +53,13 @@ exports.redirectUrl = (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+exports.clearDb = (req, res) => {
+    try {
+        Url.clear();
+        res.status(200).send('Database cleared');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+};

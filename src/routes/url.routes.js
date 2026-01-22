@@ -16,4 +16,8 @@ router.post('/shorten', urlController.shortenUrl);
 // @desc    Redirect to long/original URL
 router.get('/:code', urlController.redirectUrl);
 
+// @route   GET /api/clear-db
+// @desc    Clear the database
+router.get('/api/clear-db', urlController.clearDb);
+
 module.exports = router;

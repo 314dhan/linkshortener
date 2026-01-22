@@ -44,9 +44,14 @@ const update = (url) => {
     return null;
 };
 
+const clear = () => {
+    writeDb([]);
+};
+
 module.exports = {
     findByOriginalUrl,
     findByCode,
     save,
-    update
+    update,
+    clear
 };
